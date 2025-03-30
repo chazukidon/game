@@ -2,7 +2,9 @@ import pyxel
 import numpy as np
 import PyxelUniversalFont as puf
         
-print('aa')
+print('test')
+if 1==1:
+    print('aa')
 class Tetorimino:
     def __init__(self,field,score,erase_column_n):
         self.field=field
