@@ -52,25 +52,25 @@ class Tetorimino:
             shift_candidate=[(0,0),(0,1),(0,-1),(-1,0),(1,0)]
             for x,y in shift_candidate:
                 tetorimino=np.array(tetorimino[0])+y,np.array(tetorimino[1])+x
-                if max(tetorimino[1])+self.tetorimino_x<=self.field_x-1 and max(tetorimino[0])+self.tetorimino_y<=self.field_y-1 and all(0 ==self.field[np.array(tetorimino[0])+self.tetorimino_y,np.array(tetorimino[1])+self.tetorimino_x]):
+                if max(tetorimino[0])<self.field_y and 0<=min(tetorimino[1])and max(tetorimino[1])<self.field_x and  max(tetorimino[1])+self.tetorimino_x<=self.field_x-1 and max(tetorimino[0])+self.tetorimino_y<=self.field_y-1 and all(0 ==self.field[np.array(tetorimino[0])+self.tetorimino_y,np.array(tetorimino[1])+self.tetorimino_x]):
                     self.tetorimino=tetorimino
                     return
 
             
     def fall(self):
-        if pyxel.frame_count%self.fall_speed==0 and max(self.tetorimino[0])+self.tetorimino_y<=self.field_y-2 and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y+1,np.array(self.tetorimino[1])+self.tetorimino_x]):
+        if pyxel.frame_count%self.fall_speed==0 and max(self.tetorimino[0])+self.tetorimino_y<self.field_y-1 and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y+1,np.array(self.tetorimino[1])+self.tetorimino_x]):
             self.tetorimino_y+=1
         
     def move(self):
         
-        if pyxel.btn(pyxel.KEY_DOWN):
+        if pyxel.btnp(pyxel.KEY_DOWN):
             while max(self.tetorimino[0])+self.tetorimino_y<=self.field_y-2 and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y+1,np.array(self.tetorimino[1])+self.tetorimino_x]):
                     self.tetorimino_y+=1
                     self.score+=1
                 
         if 0!=self.tetorimino_x and pyxel.btnp(pyxel.KEY_LEFT,10,2) and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y,np.array(self.tetorimino[1])+self.tetorimino_x-1]):
             self.tetorimino_x-=1
-        if max(self.tetorimino[1])+self.tetorimino_x!=self.field_x-1 and pyxel.btnp(pyxel.KEY_RIGHT,10,2) and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y,np.array(self.tetorimino[1])+self.tetorimino_x+1]):
+        if max(self.tetorimino[1])+self.tetorimino_x<self.field_x-1 and pyxel.btnp(pyxel.KEY_RIGHT,10,2) and all(0 ==self.field[np.array(self.tetorimino[0])+self.tetorimino_y,np.array(self.tetorimino[1])+self.tetorimino_x+1]):
             self.tetorimino_x+=1
     
     def erase(self):
@@ -102,18 +102,17 @@ class App(Tetorimino):
            self.gameover=True
         
     def moving_judge(self):
-        
-        if self.falling_pause and self.movable_count==10:
-            self.moving=False
-        else:
-            for i in range(4):
-                
-                if self.tetorimino[0][i]+self.tetorimino_y==self.field_y-1 or  self.field[self.tetorimino[0][i]+self.tetorimino_y+1,self.tetorimino[1][i]+self.tetorimino_x]!=0:
-                    self.falling_pause=True
-                    self.movable_count+=1
-                    return
-            self.falling_pause=False
-            self.movable_count=0
+
+        for i in range(4):
+            
+            if self.tetorimino[0][i]+self.tetorimino_y==self.field_y-1 or  self.field[self.tetorimino[0][i]+self.tetorimino_y+1,self.tetorimino[1][i]+self.tetorimino_x]!=0:
+                self.falling_pause=True
+                self.movable_count+=1
+                if self.movable_count==6:
+                    self.moving=False
+                return
+        self.falling_pause=False
+        self.movable_count=0
     
     def home_draw(self):
         pyxel.cls(0)
@@ -124,8 +123,6 @@ class App(Tetorimino):
             
         elif pyxel.frame_count%50==0:
             self.tetris_color_code= np.roll(self.tetris_color_code, 1)
-        # else:
-           
 
 
         for i in range(6):
