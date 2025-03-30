@@ -2,7 +2,7 @@ import pyxel
 import numpy as np
 import PyxelUniversalFont as puf
         
-        
+print('aa')
 class Tetorimino:
     def __init__(self,field,score,erase_column_n):
         self.field=field
@@ -113,7 +113,7 @@ class App(Tetorimino):
                 return
         self.falling_pause=False
         self.movable_count=0
-    
+
     def home_draw(self):
         pyxel.cls(0)
         writer = puf.Writer("misaki_gothic.ttf")
