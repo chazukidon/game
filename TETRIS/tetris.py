@@ -92,6 +92,9 @@ class App(Tetorimino):
         self.gameover=False
         self.pause=False
         self.time=0
+        self.h='0'
+        self.m='0'
+        self.s='0'
 
     
     def game_judge(self):
@@ -125,24 +128,24 @@ class App(Tetorimino):
 
 
         for i in range(6):
-            writer.draw(120+i*35, 220, tetris[i],70, self.tetris_color_code[i])
-        writer.draw(145, 500,'PRESS S TO START',20 , 13)
+            writer.draw(140+i*35, 220, tetris[i],70, self.tetris_color_code[i])
+        writer.draw(165, 500,'PRESS S TO START',20 , 13)
 
     def pause_draw(self):
         pyxel.cls(0)
         writer = puf.Writer("misaki_gothic.ttf")
-        writer.draw(130, 200, "Pause", 70, 3)
+        writer.draw(150, 200, "Pause", 70, 3)
         writer.draw(185, 320, "Lv:"+str(self.erase_column_n//10+1), 30, 5)
         writer.draw(140, 370, "SCORE:"+str(self.score), 30, 5)
-        writer.draw(155, 420, "TIME:{0}:{1}:{2}".format((self.time//60)//60,(self.time//60)%60,self.time%60), 30, 5)
+        writer.draw(155, 420, "TIME:"+(2-len(self.h))*'0'+self.h+':'+(2-len(self.m))*'0'+self.m+':'+(2-len(self.s))*'0'+self.s, 30, 5)
     
     def gameover_draw(self):
         pyxel.cls(0)
         writer = puf.Writer("misaki_gothic.ttf")
-        writer.draw(110, 200, "GAME OVER", 50, 8)
+        writer.draw(130, 200, "GAME OVER", 50, 8)
         writer.draw(185, 320, "Lv:"+str(self.erase_column_n//10+1), 30, 5)
         writer.draw(140, 370, "SCORE:"+str(self.score), 30, 5)
-        writer.draw(155, 420, "TIME:{0}:{1}:{2}".format((self.time//60)//60,(self.time//60)%60,self.time%60), 30, 5)
+        writer.draw(155, 420, "TIME:"+(2-len(self.h))*'0'+self.h+':'+(2-len(self.m))*'0'+self.m+':'+(2-len(self.s))*'0'+self.s, 30, 5)
     
     
     
@@ -192,12 +195,12 @@ class App(Tetorimino):
         writer.draw(300+flame_x, flame_y-18, "NEXT", 18, 13)
         
         writer.draw(320, 450, "Lv:"+str(self.erase_column_n//10+1), 20, 3)
-        writer.draw(320, 550, "TIME:{0}:{1}:{2}".format((self.time//60)//60,(self.time//60)%60,self.time%60), 20, 3)
+        writer.draw(320, 550, "TIME:"+(2-len(self.h))*'0'+self.h+':'+(2-len(self.m))*'0'+self.m+':'+(2-len(self.s))*'0'+self.s, 20, 3)
         writer.draw(320, 500, "SCORE:"+str(self.score), 20, 3)
         
 class Game(App):
     def __init__(self): 
-        pyxel.init(450,600,fps=60)
+        pyxel.init(470,600,fps=60,title='TETRIS')
         App.__init__(self)
         Tetorimino.__init__(self,np.zeros((22,10),dtype=int),0,0)
         self.game_progress=False
@@ -217,6 +220,9 @@ class Game(App):
                 
                 elif self.gameover is False:
                     self.time+=1
+                    self.h=str((self.time//60)//60//60)
+                    self.m=str((self.time//60)//60)
+                    self.s=str((self.time//60)%60)
 
                     if self.moving:
                         self.fall()
